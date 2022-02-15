@@ -8,9 +8,11 @@ import (
 	mysql "users/user/repo"
 	"users/user/usecase"
 
+	docs "users/docs"
+
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
 )
 
@@ -36,6 +38,7 @@ func main() {
 	userUsecase := usecase.NewUserUsecase(userRepo)
 	http.NewUserHandler(e, userUsecase)
 
+	docs.NewDocumentation(e, e.Group(""))
 	port := viper.GetString("APPLICATION_PORT")
 	log.Fatal(e.Start(":" + port))
 }

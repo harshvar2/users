@@ -1,0 +1,252 @@
+openapi: 3.0.1
+info:
+  title: Users API
+  description: |
+    Users Service
+
+  version: 1.0.0
+
+paths:
+  /users:
+    get:
+      summary: Returns a list of users
+      description: |
+        The list of Users contains:
+        - ID
+        - Name
+        - DateOfBirth
+        - Address
+        - Description
+        - CreatedAt
+        - UpdatedAt
+      responses:
+        200:
+          description: "Successful Operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/responses/UsersResponse"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/responses/badRequest"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/responses/InternalServerError"
+      operationId: users
+      tags:
+        - UsersResponse
+
+    post:
+      summary: Creates a new user
+      description: |
+        The User can be created with :
+        - Name
+        - DateOfBirth
+        - Address
+        - Description
+      parameters:
+        - name: User
+          in: body
+          description: Creates a New user
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                example: username
+              dob:
+                type: string
+                example: "01-01-2001"
+              address:
+                type: string
+                example: India
+              description:
+                type: string
+                example: description
+          required: true
+      responses:
+        200:
+          description: "Successful Operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/responses/UserCreated"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/responses/InternalServerError"
+      tags:
+        - UsersResponse
+    put:
+      summary: Updates the details of a user
+      description: |
+        The User details can be updated with :
+        - ID
+        - Name
+        - DateOfBirth
+        - Address
+        - Description
+      parameters:
+        - name: User
+          in: body
+          description: Updates the details of a user
+          schema:
+            type: object
+            properties:
+              id:
+                type: number
+                example: 1
+              name:
+                type: string
+                example: username
+              dob:
+                type: string
+                example: "01-01-2001"
+              address:
+                type: string
+                example: India
+              description:
+                type: string
+                example: description
+          required: true
+      responses:
+        200:
+          description: "Successful Operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/responses/UserCreated"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/responses/InternalServerError"
+      tags:
+        - UsersResponse
+  /users/{id}:
+    get:
+      summary: Returns a details of a particular user
+      description: |
+        The User detail contains:
+        - ID
+        - Name
+        - DateOfBirth
+        - Address
+        - Description
+        - CreatedAt
+        - UpdatedAt
+      responses:
+        200:
+          description: "Successful Operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/UserResponse"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/responses/badRequest"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/responses/InternalServerError"
+      operationId: users
+      tags:
+        - UsersResponse
+    delete:
+      summary: Deletes a particular user from the database
+      description: Deletes a particular user from the database
+      responses:
+        200:
+          description: "Successful Operation"
+          content:
+            string:
+              example: "Successfully DeleteUserd User ID: 5"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/responses/badRequest"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/responses/InternalServerError"
+      operationId: users
+      tags:
+        - UsersResponse
+responses:
+  InternalServerError:
+    type: object
+    properties:
+      error:
+        type: string
+        example: Internal Server Error.
+  badRequest:
+    description:
+      BadRequest is a special wrapper used for showing bad request error
+      if any after performing db operations (used to show in docs)
+    properties:
+      error:
+        example: Bad request
+        type: string
+    schema:
+      $ref: "#/definitions/ResponseError"
+    type: object
+  UsersResponse:
+    description: UsersResponse
+    properties:
+      users:
+        items:
+          $ref: "#/definitions/UserResponse"
+        type: array
+    type: object
+    schema:
+      $ref: "#/definitions/UserResponse"
+  UserCreated:
+    description: UserCreated is a wrapper which is sending the response of the User created event
+    type: string
+
+
+definitions:
+  ResponseError:
+    properties:
+      errorCode:
+        type: string
+      errorDescription:
+        type: string
+    title: ResponseError represents the error code sent as string .
+    type: object
+
+  UserResponse:
+    description: UserResponse is a response struct for the user details
+    properties:
+      id:
+        type: integer
+        description: ID of the user; Primary Key
+      name:
+        type: string
+        description: Name of the user
+      dob:
+        type: string
+        description: Date of birth of the user
+      address:
+        type: string
+        description: Address of the user
+    type: object
+
